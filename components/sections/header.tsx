@@ -39,7 +39,7 @@ export function Header() {
             <a href="#" className="flex items-center gap-2">
               <Image 
                 src="/logo-header.webp" 
-                alt="Norium Studios Logo" 
+                alt="Noirum Studios Logo" 
                 width={300} 
                 height={90} 
                 className="w-40 md:w-48 lg:w-56 h-auto object-contain"

@@ -19,7 +19,7 @@ export function About() {
               Projetos que exigem excelência.
             </h2>
             <p className="mt-8 text-xl md:text-2xl text-zinc-400 leading-relaxed font-light">
-              A Norium Studios é uma unidade de engenharia especializada, dedicada a marcas que exigem qualidade, velocidade e elegância arquitetônica sem concessões.
+              A Noirum Studios é uma unidade de engenharia especializada, dedicada a marcas que exigem qualidade, velocidade e elegância arquitetônica sem concessões.
             </p>
             <p className="mt-6 text-zinc-500 leading-relaxed">
               Nossa equipe opera na intersecção entre precisão em design e excelência em engenharia. Firmamos parceria com instituições, empresas e fundadores que compreendem que presença digital não é apenas recurso — é vantagem competitiva.

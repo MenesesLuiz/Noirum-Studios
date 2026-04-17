@@ -7,8 +7,8 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Norium Studios',
-  description: 'Norium Studios builds high-performance institutional websites and scalable architectures. We integrate AI and enterprise-grade security into every solution.',
+  title: 'Noirum Studios',
+  description: 'Noirum Studios builds high-performance institutional websites and scalable architectures. We integrate AI and enterprise-grade security into every solution.',
   generator: 'v0.app',
   icons: {
     icon: '/logo-mini.webp',

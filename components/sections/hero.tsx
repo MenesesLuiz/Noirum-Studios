@@ -30,7 +30,7 @@ export function Hero() {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="mt-8 text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto leading-relaxed text-pretty"
           >
-            A Norium Studios constrói sites institucionais de alta performance e arquiteturas escaláveis. Integramos IA e segurança de nível corporativo em cada solução.
+            A Noirum Studios constrói sites institucionais de alta performance e arquiteturas escaláveis. Integramos IA e segurança de nível corporativo em cada solução.
           </motion.p>
           
           <motion.div

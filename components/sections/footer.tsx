@@ -107,7 +107,7 @@ export function Footer() {
           <div className="flex items-center gap-3">
             <Image 
               src="/logo-header.webp" 
-              alt="Norium Studios Logo" 
+              alt="Noirum Studios Logo" 
               width={200} 
               height={60} 
               className="w-32 md:w-40 h-auto object-contain"
@@ -115,7 +115,7 @@ export function Footer() {
           </div>
           
           <div className="flex items-center gap-6 text-xs text-zinc-600">
-            <span>© {currentYear} Norium Studios</span>
+            <span>© {currentYear} Noirum Studios</span>
             <span className="hidden md:inline text-zinc-800">•</span>
             <span className="hidden md:inline">Todos os sistemas operacionais</span>
           </div>
