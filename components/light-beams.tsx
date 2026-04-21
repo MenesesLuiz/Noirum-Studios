@@ -111,14 +111,14 @@ function LightBeamParticles() {
         z: (Math.random() - 0.5) * 6,
 
         // *** 2 -> A DOBRA CÚBICA (BURACO NEGRO) FIXADA PARA ELES CORREREM NELA ***
-        // P0 (Nascem longe lateralmente embaixo)
-        p0: [side * (12 + lane * 6), -10 + lane * 4], 
-        // P1 (Correm forte para o meio, caindo um tiquinho no eixo gravidade)
-        p1: [side * (4 + lane * 2), -5 + lane * 2], 
+        // P0 (Nascem desde quase o centro até longe lateralmente embaixo)
+        p0: [side * (1 + lane * 15), -12 + lane * 4], 
+        // P1 (Correm forte para o meio ou sobem mais reto)
+        p1: [side * (0.5 + lane * 6), -5 + lane * 2], 
         // P2 (A Borda do Buraco Negro: Aperta brutalmente no meio)
-        p2: [side * (0.2 + lane * 1.5), -1 + lane * 1.5], 
+        p2: [side * (0.05 + lane * 1.5), -1 + lane * 1.5], 
         // P3 (Catapultados pra cima como energia)
-        p3: [side * (0.5 + lane * 2.5), 18]
+        p3: [side * (0.1 + lane * 2.5), 18]
       }
     })
   }, [])

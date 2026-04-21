@@ -7,12 +7,10 @@ const footerLinks = {
   agency: [
     { label: "Sobre", href: "#" },
     { label: "Processo", href: "#" },
-    { label: "Carreiras", href: "#" },
   ],
   services: [
     { label: "Plataformas Web", href: "#" },
     { label: "Landing Pages", href: "#" },
-    { label: "Integração com IA", href: "#" },
   ],
   legal: [
     { label: "Privacidade", href: "#" },
@@ -20,9 +18,7 @@ const footerLinks = {
     { label: "Segurança", href: "#" },
   ],
   contact: [
-    { label: "ola@mns.dev", href: "mailto:ola@mns.dev" },
-    { label: "LinkedIn", href: "#" },
-    { label: "Twitter", href: "#" },
+    { label: "94992810971", href: "https://wa.me/5594992810971" },
   ],
 }
 
