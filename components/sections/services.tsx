@@ -2,17 +2,20 @@
 
 import { motion } from "framer-motion"
 import { Globe, Zap, Shield, Cpu } from "lucide-react"
+import Link from "next/link"
 
 const services = [
   {
     icon: Globe,
     title: "Plataformas Web Institucionais",
-    description: "Plataformas web de nível corporativo construídas para escabilidade, segurança e performance. Projetadas para representar instituições globais."
+    description: "Plataformas web de nível corporativo construídas para escabilidade, segurança e performance. Projetadas para representar instituições globais.",
+    href: "/servicos/site-institucional"
   },
   {
     icon: Zap,
     title: "Landing Pages de Alta Conversão",
-    description: "Páginas estrategicamente projetadas para converter. Cada elemento otimizado por meio de princípios de design orientados a dados."
+    description: "Páginas estrategicamente projetadas para converter. Cada elemento otimizado por meio de princípios de design orientados a dados.",
+    href: "/servicos/landing-pages"
   },
   {
     icon: Shield,
@@ -69,35 +72,48 @@ export function Services() {
           viewport={{ once: true, margin: "-100px" }}
           className="grid grid-cols-1 md:grid-cols-2 gap-px bg-zinc-800"
         >
-          {services.map((service, index) => (
-            <motion.div
-              key={service.title}
-              variants={itemVariants}
-              className="group relative bg-background p-8 lg:p-12 transition-colors duration-500 hover:bg-zinc-950"
-            >
-              {/* Subtle glow on hover */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent" />
+          {services.map((service, index) => {
+            const CardContent = (
+              <motion.div
+                variants={itemVariants}
+                className="group relative bg-background p-8 lg:p-12 transition-colors duration-500 hover:bg-zinc-950 h-full"
+              >
+                {/* ... */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+                  <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent" />
+                </div>
+                
+                <service.icon className="w-6 h-6 text-zinc-500 group-hover:text-zinc-300 transition-colors duration-300" strokeWidth={1.5} />
+                
+                <h3 className="mt-6 text-xl font-medium text-foreground tracking-tight">
+                  {service.title}
+                </h3>
+                
+                <p className="mt-4 text-zinc-500 leading-relaxed text-sm">
+                  {service.description}
+                </p>
+                
+                {service.href && (
+                  <div className="mt-8 flex items-center text-xs uppercase tracking-[0.15em] text-zinc-400 group-hover:text-cyan-400 font-semibold transition-colors duration-300">
+                    <span>Saiba mais</span>
+                    <svg className="ml-2 w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </div>
+                )}
+              </motion.div>
+            );
+
+            return service.href ? (
+              <Link key={service.title} href={service.href} className="block">
+                {CardContent}
+              </Link>
+            ) : (
+              <div key={service.title} className="block cursor-default">
+                {CardContent}
               </div>
-              
-              <service.icon className="w-6 h-6 text-zinc-500 group-hover:text-zinc-300 transition-colors duration-300" strokeWidth={1.5} />
-              
-              <h3 className="mt-6 text-xl font-medium text-foreground tracking-tight">
-                {service.title}
-              </h3>
-              
-              <p className="mt-4 text-zinc-500 leading-relaxed text-sm">
-                {service.description}
-              </p>
-              
-              <div className="mt-8 flex items-center text-xs uppercase tracking-[0.15em] text-zinc-600 group-hover:text-zinc-400 transition-colors duration-300">
-                <span>Saiba mais</span>
-                <svg className="ml-2 w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </div>
-            </motion.div>
-          ))}
+            );
+          })}
         </motion.div>
       </div>
     </section>

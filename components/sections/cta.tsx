@@ -22,12 +22,17 @@ export function CTA() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="mt-12"
+            className="mt-12 flex justify-center"
           >
-            <button className="group relative px-10 py-4 bg-primary text-primary-foreground font-medium text-sm tracking-wide transition-all duration-300 hover:bg-primary/90">
+            <a 
+              href="https://wa.me/5594992810971"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group relative px-10 py-4 bg-primary text-primary-foreground font-medium text-sm tracking-wide transition-all duration-300 hover:bg-primary/90 flex items-center justify-center"
+            >
               Iniciar uma Conversa
               <span className="absolute inset-0 border border-primary/20 -m-px opacity-0 group-hover:opacity-100 transition-opacity" />
-            </button>
+            </a>
           </motion.div>
           
           <motion.p

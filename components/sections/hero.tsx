@@ -39,14 +39,22 @@ export function Hero() {
             transition={{ duration: 0.8, delay: 0.6 }}
             className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4"
           >
-            <button className="group relative px-8 py-3 bg-primary text-primary-foreground font-medium text-sm tracking-wide transition-all duration-300 hover:bg-primary/90">
+            <a 
+              href="https://wa.me/5594992810971"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group relative px-8 py-3 bg-primary text-primary-foreground font-medium text-sm tracking-wide transition-all duration-300 hover:bg-primary/90 flex items-center justify-center"
+            >
               Iniciar Projeto
               <span className="absolute inset-0 border border-primary/20 -m-px opacity-0 group-hover:opacity-100 transition-opacity" />
-            </button>
+            </a>
             
-            <button className="px-8 py-3 border border-white/10 text-foreground font-medium text-sm tracking-wide transition-all duration-300 hover:bg-white/5 hover:border-white/20">
+            <a 
+              href="#process"
+              className="px-8 py-3 border border-white/10 text-foreground font-medium text-sm tracking-wide transition-all duration-300 hover:bg-white/5 hover:border-white/20 flex items-center justify-center"
+            >
               Ver Arquitetura
-            </button>
+            </a>
           </motion.div>
         </motion.div>
         

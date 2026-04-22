@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Image from "next/image"
+import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import { Menu, X } from "lucide-react"
 
@@ -36,7 +37,7 @@ export function Header() {
         <div className="container mx-auto px-6">
           <div className="flex items-center justify-between min-h-20 py-4">
             {/* Logo */}
-            <a href="#" className="flex items-center gap-2">
+            <Link href="/" className="flex items-center gap-2">
               <Image 
                 src="/logo-header.webp" 
                 alt="Noirum Studios Logo" 
@@ -45,7 +46,7 @@ export function Header() {
                 className="w-40 md:w-48 lg:w-56 h-auto object-contain"
                 priority
               />
-            </a>
+            </Link>
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-8">
@@ -62,9 +63,14 @@ export function Header() {
 
             {/* CTA Button */}
             <div className="hidden md:block">
-              <button className="px-5 py-2 bg-primary text-primary-foreground text-sm font-medium tracking-wide transition-all duration-300 hover:bg-primary/90">
+              <a 
+                href="https://wa.me/5594992810971"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-5 py-2 inline-block bg-primary text-primary-foreground text-sm font-medium tracking-wide transition-all duration-300 hover:bg-primary/90"
+              >
                 Contato
-              </button>
+              </a>
             </div>
 
             {/* Mobile Menu Button */}
@@ -110,9 +116,14 @@ export function Header() {
                 transition={{ duration: 0.3, delay: 0.4 }}
                 className="mt-12"
               >
-                <button className="w-full px-6 py-4 bg-primary text-primary-foreground text-sm font-medium tracking-wide">
+                <a 
+                  href="https://wa.me/5594992810971"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full px-6 py-4 inline-block text-center bg-primary text-primary-foreground text-sm font-medium tracking-wide"
+                >
                   Contato
-                </button>
+                </a>
               </motion.div>
             </nav>
           </motion.div>

@@ -13,12 +13,13 @@ const footerLinks = {
     { label: "Landing Pages", href: "#" },
   ],
   legal: [
-    { label: "Privacidade", href: "#" },
-    { label: "Termos", href: "#" },
-    { label: "Segurança", href: "#" },
+    { label: "Privacidade", href: "/privacidade" },
+    { label: "Termos", href: "/termos" },
+    { label: "Segurança", href: "/seguranca" },
   ],
   contact: [
-    { label: "94992810971", href: "https://wa.me/5594992810971" },
+    { label: "WhatsApp", href: "https://wa.me/5594992810971" },
+    { label: "E-mail", href: "mailto:menesesluizf@gmail.com" },
   ],
 }
 
