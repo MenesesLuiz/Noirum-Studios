@@ -2,7 +2,7 @@
 
 import { FormEvent, useRef, useState } from "react"
 import Image from "next/image"
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion"
+import { motion, useScroll, useTransform } from "framer-motion"
 import {
   ArrowRight,
   ArrowUpRight,
@@ -100,7 +100,6 @@ function trackEvent(name: string, data?: Record<string, string>) {
 type RevealVariant = "lift" | "clip" | "side" | "project" | "project-reverse" | "image"
 
 function Reveal({ children, className = "", variant = "lift", delay = 0 }: { children: React.ReactNode; className?: string; variant?: RevealVariant; delay?: number }) {
-  const reducedMotion = useReducedMotion()
   const initialStates: Record<RevealVariant, Record<string, string | number>> = {
     lift: { opacity: 1, y: 18 },
     clip: { opacity: 1, y: 8, clipPath: "inset(0 0 100% 0)" },
@@ -112,10 +111,11 @@ function Reveal({ children, className = "", variant = "lift", delay = 0 }: { chi
 
   return (
     <motion.div
-      initial={reducedMotion ? false : initialStates[variant]}
+      initial={initialStates[variant]}
       whileInView={{ opacity: 1, x: 0, y: 0, scale: 1, clipPath: "inset(0 0 0 0)" }}
       viewport={{ once: true, margin: "0px 0px -12%" }}
-      transition={reducedMotion ? { duration: 0 } : { duration: 0.72, delay, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.72, delay, ease: [0.16, 1, 0.3, 1] }}
+      data-reveal="true"
       className={className}
     >
       {children}
@@ -124,9 +124,8 @@ function Reveal({ children, className = "", variant = "lift", delay = 0 }: { chi
 }
 
 function HeroHeadline() {
-  const reducedMotion = useReducedMotion()
-  const transition = (delay: number) => reducedMotion ? { duration: 0 } : { duration: 0.82, delay, ease: [0.16, 1, 0.3, 1] as const }
-  const initial = reducedMotion ? false : { y: "8px", opacity: 1 }
+  const transition = (delay: number) => ({ duration: 0.82, delay, ease: [0.16, 1, 0.3, 1] as const })
+  const initial = { y: "8px", opacity: 1 }
 
   return (
     <h1 id="hero-title" className="display-heading display-heading--hero">
@@ -138,13 +137,12 @@ function HeroHeadline() {
 
 function ProjectVisual({ project, sizes, parallax = ["-3%", "3%"] }: { project: Project; sizes: string; parallax?: [string, string] }) {
   const ref = useRef<HTMLDivElement>(null)
-  const reducedMotion = useReducedMotion()
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] })
   const imageY = useTransform(scrollYProgress, [0, 1], parallax)
 
   return (
     <div ref={ref} className="project-visual">
-      <motion.div className="project-visual-image" style={reducedMotion ? undefined : { y: imageY }}>
+      <motion.div className="project-visual-image" style={{ y: imageY }}>
         <Image src={project.image} alt={project.alt} fill sizes={sizes} loading={project.id === "01" ? undefined : "lazy"} />
       </motion.div>
       <span className="project-index">{project.id}</span>
@@ -223,8 +221,6 @@ export function EngineeringScan() {
 export function NoirumHome() {
   const [openFaq, setOpenFaq] = useState<number | null>(0)
   const [formState, setFormState] = useState<"idle" | "error" | "success">("idle")
-  const reducedMotion = useReducedMotion()
-
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const form = event.currentTarget
@@ -353,11 +349,11 @@ export function NoirumHome() {
             <p>Escolha o problema que precisa ser resolvido. O escopo exato entra na proposta.</p>
           </Reveal>
           <div className="service-choices">
-            <motion.article className="service-choice" initial={reducedMotion ? false : { opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "0px 0px -10%" }} transition={reducedMotion ? { duration: 0 } : { duration: 0.72, ease: [0.16, 1, 0.3, 1] }}>
+            <motion.article className="service-choice" data-reveal="true" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "0px 0px -10%" }} transition={{ duration: 0.72, ease: [0.16, 1, 0.3, 1] }}>
               <div className="service-choice-media"><Image src="/visuals/brutalist-night.jpg" alt="Estrutura de concreto vista à noite" fill sizes="(max-width: 900px) 100vw, 48vw" loading="lazy" /></div>
               <div className="service-choice-body"><span className="service-number">01</span><h3>Sites institucionais premium</h3><p>Uma presença digital sob medida para explicar a empresa, organizar autoridade e abrir espaço para novas conversas.</p><a href="/servicos/site-institucional" className="inline-link inline-link--dark">Conhecer a oferta <ArrowUpRight size={15} /></a></div>
             </motion.article>
-            <motion.article className="service-choice service-choice--offset" initial={reducedMotion ? false : { opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "0px 0px -10%" }} transition={reducedMotion ? { duration: 0 } : { duration: 0.72, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}>
+            <motion.article className="service-choice service-choice--offset" data-reveal="true" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "0px 0px -10%" }} transition={{ duration: 0.72, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}>
 
               <div className="service-choice-body"><span className="service-number">02</span><h3>Landing pages de alta conversão</h3><p>Uma página com mensagem, prova e caminho de decisão organizados para uma campanha ou oferta específica.</p><a href="/servicos/landing-pages" className="inline-link inline-link--dark">Conhecer a oferta <ArrowUpRight size={15} /></a></div>
               <div className="service-choice-media"><Image src="/visuals/monitor-detail.jpg" alt="Detalhe de monitor e teclado em ambiente de trabalho" fill sizes="(max-width: 900px) 100vw, 48vw" loading="lazy" /></div>
@@ -387,7 +383,7 @@ export function NoirumHome() {
           </Reveal>
           <Reveal className="engineering-proof" variant="side">
             {engineeringItems.map((item, index) => (
-              <motion.div className="proof-word" key={item} initial={reducedMotion ? false : { opacity: 0, x: 18 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "0px 0px -10%" }} transition={reducedMotion ? { duration: 0 } : { duration: 0.58, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}><Check size={20} /> {item}</motion.div>
+              <motion.div className="proof-word" data-reveal="true" key={item} initial={{ opacity: 0, x: 18 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "0px 0px -10%" }} transition={{ duration: 0.58, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}><Check size={20} /> {item}</motion.div>
             ))}
             <div className="proof-note"><ShieldCheck size={18} strokeWidth={1.3} /><span>A fundação é construída com cuidado. A manutenção contínua depende também da hospedagem, das senhas e das atualizações do projeto.</span></div>
           </Reveal>

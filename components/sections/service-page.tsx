@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { motion, useReducedMotion } from "framer-motion"
+import { motion } from "framer-motion"
 import { ArrowRight, ArrowUpRight, Check, Mail } from "lucide-react"
 
 type ServicePageProps = {
@@ -78,8 +78,7 @@ const services: Record<ServicePageProps["kind"], ServiceData> = {
 type RevealVariant = "lift" | "clip" | "side"
 
 function Reveal({ children, className = "", variant = "lift", delay = 0 }: { children: React.ReactNode; className?: string; variant?: RevealVariant; delay?: number }) {
-  const reducedMotion = useReducedMotion()
-  const initial = reducedMotion ? false : {
+  const initial = {
     lift: { opacity: 1, y: 16 },
     clip: { opacity: 1, y: 8, clipPath: "inset(0 0 100% 0)" },
     side: { opacity: 1, x: 22 },
@@ -90,7 +89,8 @@ function Reveal({ children, className = "", variant = "lift", delay = 0 }: { chi
       initial={initial}
       whileInView={{ opacity: 1, x: 0, y: 0, clipPath: "inset(0 0 0 0)" }}
       viewport={{ once: true, margin: "0px 0px -12%" }}
-      transition={reducedMotion ? { duration: 0 } : { duration: 0.68, delay, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.68, delay, ease: [0.16, 1, 0.3, 1] }}
+      data-reveal="true"
       className={className}
     >
       {children}
