@@ -1,131 +1,66 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { motion, AnimatePresence } from "framer-motion"
+import { AnimatePresence, motion } from "framer-motion"
 import { Menu, X } from "lucide-react"
 
 const navLinks = [
-  { label: "Serviços", href: "#services" },
-  { label: "Processo", href: "#process" },
-  { label: "Sobre", href: "#about" },
+  { label: "Projetos", href: "/#projects" },
+  { label: "Serviços", href: "/#services" },
+  { label: "Processo", href: "/#process" },
+  { label: "Sobre", href: "/#about" },
 ]
+
+const proposalUrl = "/#contact"
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50)
-    }
-    window.addEventListener("scroll", handleScroll)
+    const handleScroll = () => setIsScrolled(window.scrollY > 24)
+    handleScroll()
+    window.addEventListener("scroll", handleScroll, { passive: true })
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
+
+  const closeMenu = () => setIsMobileMenuOpen(false)
 
   return (
     <>
       <motion.header
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          isScrolled ? "bg-background/80 backdrop-blur-md border-b border-white/5" : ""
-        }`}
+        initial={{ opacity: 0, y: -16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.55, ease: [0.4, 0, 0.2, 1] }}
+        className={`site-header ${isScrolled ? "site-header--scrolled" : ""}`}
       >
-        <div className="container mx-auto px-6">
-          <div className="flex items-center justify-between min-h-20 py-4">
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-2">
-              <Image 
-                src="/logo-header.webp" 
-                alt="Noirum Studios Logo" 
-                width={300} 
-                height={90} 
-                className="w-40 md:w-48 lg:w-56 h-auto object-contain"
-                priority
-              />
-            </Link>
+        <div className="container noirum-container site-header-inner">
+          <Link href="/" className="site-logo" aria-label="Noirum Studios — início">
+            <Image src="/logo-header.webp" alt="Noirum Studios" width={300} height={90} priority />
+          </Link>
 
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center gap-8">
-              {navLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  className="text-sm text-zinc-400 hover:text-foreground transition-colors duration-300"
-                >
-                  {link.label}
-                </a>
-              ))}
-            </nav>
+          <nav className="site-nav" aria-label="Navegação principal">
+            {navLinks.map((link) => <Link key={link.label} href={link.href}>{link.label}</Link>)}
+          </nav>
 
-            {/* CTA Button */}
-            <div className="hidden md:block">
-              <a 
-                href="https://wa.me/5594992810971"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-5 py-2 inline-block bg-primary text-primary-foreground text-sm font-medium tracking-wide transition-all duration-300 hover:bg-primary/90"
-              >
-                Contato
-              </a>
-            </div>
+          <Link href={proposalUrl} className="header-cta">Solicitar proposta <span aria-hidden="true">↗</span></Link>
 
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 text-zinc-400 hover:text-foreground transition-colors"
-            >
-              {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-          </div>
+          <button type="button" className="mobile-menu-toggle" aria-label={isMobileMenuOpen ? "Fechar menu" : "Abrir menu"} aria-expanded={isMobileMenuOpen} onClick={() => setIsMobileMenuOpen((open) => !open)}>
+            {isMobileMenuOpen ? <X size={20} strokeWidth={1.25} /> : <Menu size={20} strokeWidth={1.25} />}
+          </button>
         </div>
       </motion.header>
 
-      {/* Mobile Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-40 bg-background pt-20 md:hidden"
-          >
-            <nav className="container mx-auto px-6 py-8">
-              <div className="space-y-6">
-                {navLinks.map((link, index) => (
-                  <motion.a
-                    key={link.label}
-                    href={link.href}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.1 }}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="block text-2xl font-medium text-foreground"
-                  >
-                    {link.label}
-                  </motion.a>
-                ))}
-              </div>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.3, delay: 0.4 }}
-                className="mt-12"
-              >
-                <a 
-                  href="https://wa.me/5594992810971"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full px-6 py-4 inline-block text-center bg-primary text-primary-foreground text-sm font-medium tracking-wide"
-                >
-                  Contato
-                </a>
-              </motion.div>
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.22 }} className="mobile-menu" role="dialog" aria-modal="true" aria-label="Menu principal">
+            <nav aria-label="Navegação mobile">
+              {navLinks.map((link, index) => <motion.div key={link.label} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05, duration: 0.35 }}><Link href={link.href} onClick={closeMenu}>{link.label}<span aria-hidden="true">↗</span></Link></motion.div>)}
             </nav>
+            <Link href={proposalUrl} className="button button--light mobile-menu-cta" onClick={closeMenu}>Solicitar proposta <span aria-hidden="true">↗</span></Link>
+            <div className="mobile-menu-foot"><span>NOIRUM STUDIOS</span><span>DESIGN / ENGINEERING</span></div>
           </motion.div>
         )}
       </AnimatePresence>
