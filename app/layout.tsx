@@ -9,13 +9,13 @@ const sora = Sora({ subsets: ["latin"], variable: "--font-display", weight: ["40
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://noirum-studios.vercel.app"),
-  title: "Noirum Studios — Desenvolvimento Web para a Elite Digital.",
-  description: "Sites institucionais premium e landing pages de alta conversão, construídos com direção visual e engenharia web.",
+  title: "Noirum Studios — Desenvolvimento web com direção",
+  description: "Sites institucionais e landing pages construídos por Luiz Felipe Meneses com direção visual, conteúdo claro e desenvolvimento web cuidadoso.",
   generator: "Noirum Studios",
   alternates: { canonical: "/" },
   openGraph: {
-    title: "Noirum Studios — Desenvolvimento Web para a Elite Digital.",
-    description: "Presenças digitais premium, precisas e prontas para operar.",
+    title: "Noirum Studios — Desenvolvimento web com direção",
+    description: "Presença digital clara, sob medida e pronta para ser entendida.",
     url: "https://noirum-studios.vercel.app",
     siteName: "Noirum Studios",
     locale: "pt_BR",
@@ -23,16 +23,24 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Noirum Studios — Desenvolvimento Web para a Elite Digital.",
-    description: "Sites institucionais premium e landing pages de alta conversão.",
+    title: "Noirum Studios — Desenvolvimento web com direção",
+    description: "Sites institucionais e landing pages construídos por Luiz Felipe Meneses.",
   },
   icons: { icon: "/logo-mini.webp" },
 }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="pt-BR" className={`${geist.variable} ${geistMono.variable} ${sora.variable} bg-[#181818] scroll-smooth`}>
+    <html lang="pt-BR" className={`${geist.variable} ${geistMono.variable} ${sora.variable}`}>
       <body className="font-sans antialiased">
+        {/*
+          THESIS: A Noirum traduz complexidade em presença digital clara e recusa a agência genérica que só decora superfícies.
+          OWN-WORLD: preto, pedra e ciano pontual; Sora em títulos, Geist no corpo, linhas finas, imagem documental e componentes sem ornamento.
+          STORY: o visitante entende quem conduz o trabalho, conhece as duas ofertas, vê como elas são construídas e inicia uma conversa com contexto.
+          FIRST VIEWPORT: imagem documental à esquerda, headline em duas linhas à direita, subtexto curto e a ação primária visível no primeiro momento.
+          FORM: composição split assimétrica, posição 1 de 7, seed key noirum-v3-global-human-01.
+          FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance.
+        */}
         {children}
         {process.env.NODE_ENV === "production" && <Analytics />}
       </body>

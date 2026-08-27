@@ -1,82 +1,92 @@
 "use client"
 
 import { FormEvent, useRef, useState } from "react"
+import Image from "next/image"
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion"
 import {
-  ArrowDown,
   ArrowRight,
   ArrowUpRight,
   Check,
   Plus,
   Send,
   ShieldCheck,
-  Sparkles,
-  Zap,
 } from "lucide-react"
 
 const whatsappNumber = "5594992810971"
 
-const projects = [
+type Project = {
+  id: string
+  title: string
+  description: string
+  meta: string
+  image: string
+  alt: string
+}
+
+const projects: Project[] = [
   {
     id: "01",
-    type: "Direção demonstrativa",
-    title: "Sistemas institucionais",
+    title: "Presença institucional",
     description:
-      "Uma presença digital construída para explicar negócios complexos com clareza, autoridade e espaço para crescimento.",
-    meta: "Institucional / Arquitetura de conteúdo",
+      "Uma arquitetura de conteúdo para negócios que precisam explicar sua operação sem diminuir sua complexidade.",
+    meta: "Conteúdo / Arquitetura",
     image: "/visuals/brutalist-night.jpg",
     alt: "Fachada brutalista em preto e branco durante a noite",
-    align: "left",
   },
   {
     id: "02",
-    type: "Direção demonstrativa",
-    title: "Landing pages de conversão",
+    title: "Página de decisão",
     description:
-      "Páginas que organizam atenção em torno de uma decisão: uma mensagem forte, uma prova clara e um próximo passo sem ruído.",
+      "Uma landing page com mensagem, prova e próximo passo organizados para uma oferta específica.",
     meta: "Campanha / Conversão",
     image: "/visuals/monitor-detail.jpg",
     alt: "Detalhe de monitor e teclado em um ambiente de trabalho com pouca luz",
-    align: "right",
   },
   {
     id: "03",
-    type: "Sistema visual",
-    title: "Infraestrutura que sustenta",
+    title: "Base que sustenta",
     description:
-      "Design, performance, SEO e segurança tratados como uma única camada de engenharia — não como remendos depois do lançamento.",
-    meta: "Performance / Engenharia web",
+      "A camada técnica tratada como parte da experiência, com estrutura limpa, semântica e espaço para evoluir.",
+    meta: "Código / Performance",
     image: "/visuals/server-racks.jpg",
     alt: "Racks de servidores com luzes de status em ambiente escuro",
-    align: "left",
   },
 ]
+
+const processSteps = [
+  ["01", "Entender", "Contexto, objetivo, público e materiais disponíveis."],
+  ["02", "Direcionar", "Mensagem, hierarquia, conteúdo e linguagem visual."],
+  ["03", "Construir", "Interface, código e estados preparados para uso real."],
+  ["04", "Revisar", "Ajustes, validação técnica e lançamento com contexto."],
+] as const
+
+const engineeringItems = ["Semântica", "Responsivo", "Acessível", "Explicável"]
 
 const faqs = [
   {
     question: "Quanto custa um site premium?",
     answer:
-      "O investimento depende do escopo, da profundidade de conteúdo e das integrações necessárias. A conversa inicial serve para entender o cenário antes de sugerir uma estrutura de projeto.",
+      "O investimento depende do escopo, da profundidade de conteúdo e das integrações necessárias. Primeiro entendo o cenário, depois organizo uma proposta específica para o projeto.",
   },
   {
     question: "Quanto tempo leva para construir?",
     answer:
-      "O prazo é definido depois do planejamento e varia conforme o número de páginas, a disponibilidade de conteúdo e o nível de customização. O cronograma é organizado por fases, não por estimativas genéricas.",
+      "O prazo é definido depois do planejamento e varia conforme o número de páginas, a disponibilidade dos materiais e o nível de customização. O cronograma entra na proposta, não em uma promessa genérica.",
   },
   {
     question: "O site será responsivo e preparado para SEO?",
     answer:
-      "Sim. Responsividade, estrutura semântica, fundamentos técnicos de SEO e carregamento eficiente fazem parte da base de construção, não de uma etapa opcional.",
+      "Sim. Responsividade, estrutura semântica, fundamentos técnicos de SEO e carregamento eficiente fazem parte da base de construção.",
   },
   {
-    question: "Vocês cuidam de hospedagem, suporte e alterações?",
+    question: "Você cuida da hospedagem e das alterações?",
     answer:
-      "Esses pontos são alinhados conforme a necessidade de cada projeto. No contato inicial, você pode informar o que já existe e o que precisa ser estruturado para que o escopo seja claro.",
+      "Esses pontos são combinados conforme a necessidade de cada projeto. No contato inicial, você pode contar o que já existe e o que ainda precisa ser estruturado.",
   },
   {
     question: "Como funciona o processo?",
     answer:
-      "O trabalho passa por planejamento estratégico, construção exclusiva, ajustes de retenção e conversão, e lançamento com uma base pronta para acompanhar o crescimento.",
+      "O trabalho passa por entendimento do cenário, direção, construção, revisão e lançamento. Cada fase tem um objetivo claro e depende do material necessário para avançar.",
   },
 ]
 
@@ -87,30 +97,80 @@ function trackEvent(name: string, data?: Record<string, string>) {
   }
 }
 
-export function EngineeringScan() {
-  const scanRef = useScrollTarget()
+type RevealVariant = "lift" | "clip" | "side" | "project" | "project-reverse" | "image"
+
+function Reveal({ children, className = "", variant = "lift", delay = 0 }: { children: React.ReactNode; className?: string; variant?: RevealVariant; delay?: number }) {
   const reducedMotion = useReducedMotion()
-  const scanX = useTransform(scanRef.scroll, [0, 1], ["12%", "88%"])
-  const blueprintClip = useTransform(scanRef.scroll, [0, 1], ["inset(0 88% 0 0)", "inset(0 12% 0 0)"])
-  const blueprintOpacity = useTransform(scanRef.scroll, [0, 0.5, 1], reducedMotion ? [0.7, 0.8, 0.9] : [0.35, 0.72, 0.9])
+  const initialStates: Record<RevealVariant, Record<string, string | number>> = {
+    lift: { opacity: 1, y: 18 },
+    clip: { opacity: 1, y: 8, clipPath: "inset(0 0 100% 0)" },
+    side: { opacity: 1, x: 24 },
+    project: { opacity: 1, x: -18, clipPath: "inset(0 100% 0 0)" },
+    "project-reverse": { opacity: 1, x: 18, clipPath: "inset(0 0 0 100%)" },
+    image: { opacity: 1, scale: 1.04, clipPath: "inset(0 0 100% 0)" },
+  }
+
+  return (
+    <motion.div
+      initial={reducedMotion ? false : initialStates[variant]}
+      whileInView={{ opacity: 1, x: 0, y: 0, scale: 1, clipPath: "inset(0 0 0 0)" }}
+      viewport={{ once: true, margin: "0px 0px -12%" }}
+      transition={reducedMotion ? { duration: 0 } : { duration: 0.72, delay, ease: [0.16, 1, 0.3, 1] }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
+function HeroHeadline() {
+  const reducedMotion = useReducedMotion()
+  const transition = (delay: number) => reducedMotion ? { duration: 0 } : { duration: 0.82, delay, ease: [0.16, 1, 0.3, 1] as const }
+  const initial = reducedMotion ? false : { y: "8px", opacity: 1 }
+
+  return (
+    <h1 id="hero-title" className="display-heading display-heading--hero">
+      <span className="hero-line"><motion.span initial={initial} animate={{ y: "0%", opacity: 1 }} transition={transition(0.08)}>Desenvolvimento web</motion.span></span>
+      <span className="hero-line"><motion.em initial={initial} animate={{ y: "0%", opacity: 1 }} transition={transition(0.18)}>para a elite digital.</motion.em></span>
+    </h1>
+  )
+}
+
+function ProjectVisual({ project, sizes, parallax = ["-3%", "3%"] }: { project: Project; sizes: string; parallax?: [string, string] }) {
+  const ref = useRef<HTMLDivElement>(null)
+  const reducedMotion = useReducedMotion()
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] })
+  const imageY = useTransform(scrollYProgress, [0, 1], parallax)
+
+  return (
+    <div ref={ref} className="project-visual">
+      <motion.div className="project-visual-image" style={reducedMotion ? undefined : { y: imageY }}>
+        <Image src={project.image} alt={project.alt} fill sizes={sizes} loading={project.id === "01" ? undefined : "lazy"} />
+      </motion.div>
+      <span className="project-index">{project.id}</span>
+    </div>
+  )
+}
+
+export function EngineeringScan() {
+  const scanRef = useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useScroll({ target: scanRef, offset: ["start end", "end start"] })
+  const scanX = useTransform(scrollYProgress, [0, 1], ["12%", "88%"])
+  const blueprintClip = useTransform(scrollYProgress, [0, 1], ["inset(0 88% 0 0)", "inset(0 12% 0 0)"])
 
   return (
     <section className="scan-section section-dark" aria-labelledby="scan-title">
       <div className="container noirum-container">
-        <div className="section-kicker">
-          <span>01</span>
-          <span>Por baixo da superfície</span>
-        </div>
-        <div className="scan-intro">
+        <div className="scan-heading">
           <h2 id="scan-title" className="display-heading display-heading--medium">
-            Bonito na frente. <span>preciso por baixo.</span>
+            O cuidado que aparece <span>começa por baixo.</span>
           </h2>
           <p>
-            A mesma atenção que você percebe no design existe na estrutura: conteúdo, interface, código e performance trabalhando em uma única direção.
+            Design, conteúdo e código são pensados juntos para que a presença digital tenha intenção em cada camada.
           </p>
         </div>
 
-        <div ref={scanRef.ref} className="scan-viewport">
+        <div ref={scanRef} className="scan-viewport">
           <div className="scan-grid" aria-hidden="true" />
           <div className="scan-finished">
             <div className="scan-finished-bar">
@@ -121,10 +181,10 @@ export function EngineeringScan() {
             </div>
             <div className="scan-finished-body">
               <div className="scan-finished-copy">
-                <span>digital architecture / 2026</span>
-                <strong>Surface<br />with intent.</strong>
+                <span>estrutura digital / demonstração</span>
+                <strong>Clareza<br />em camadas.</strong>
                 <div className="scan-finished-rule" />
-                <small>Institutional system · performance · conversion</small>
+                <small>conteúdo / interface / código</small>
               </div>
               <div className="scan-finished-blocks" aria-hidden="true">
                 <i />
@@ -134,36 +194,30 @@ export function EngineeringScan() {
             </div>
           </div>
 
-          <motion.div className="scan-blueprint" style={reducedMotion ? undefined : { clipPath: blueprintClip, opacity: blueprintOpacity }} aria-hidden="true">
-            <div className="blueprint-label">NOIRUM / SYSTEM MAP / 001</div>
+          <motion.div
+            className="scan-blueprint"
+            style={{ clipPath: blueprintClip }}
+            aria-hidden="true"
+          >
+            <div className="blueprint-label">NOIRUM / MAPA DE SISTEMA / 001</div>
             <div className="blueprint-lines">
-              <div className="blueprint-window blueprint-window--large"><span>HERO / VALUE PROP</span></div>
-              <div className="blueprint-window blueprint-window--small"><span>CTA / PRIMARY</span></div>
-              <div className="blueprint-window blueprint-window--tall"><span>CONTENT / PROOF</span></div>
+              <div className="blueprint-window blueprint-window--large"><span>PROPOSTA / CONTEXTO</span></div>
+              <div className="blueprint-window blueprint-window--small"><span>AÇÃO / PRÓXIMO PASSO</span></div>
+              <div className="blueprint-window blueprint-window--tall"><span>CONTEÚDO / PROVA</span></div>
               <div className="blueprint-cross blueprint-cross--one" />
               <div className="blueprint-cross blueprint-cross--two" />
             </div>
           </motion.div>
 
-          {!reducedMotion && <motion.div className="scan-line" style={{ left: scanX }} aria-hidden="true"><span /></motion.div>}
+          <motion.div className="scan-line" style={{ left: scanX }} aria-hidden="true"><span /></motion.div>
           <div className="scan-footnote">
-            <span>Scroll to inspect</span>
-            <ArrowDown size={14} strokeWidth={1.4} />
+            <span>Inspecione a construção</span>
+            <ArrowRight size={14} strokeWidth={1.4} />
           </div>
         </div>
       </div>
     </section>
   )
-}
-
-function useScrollTarget() {
-  const ref = useScrollRef()
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] })
-  return { ref, scroll: scrollYProgress }
-}
-
-function useScrollRef() {
-  return useRef<HTMLDivElement>(null)
 }
 
 export function NoirumHome() {
@@ -178,6 +232,7 @@ export function NoirumHome() {
     const name = String(data.get("name") || "").trim()
     const email = String(data.get("email") || "").trim()
     const projectType = String(data.get("projectType") || "").trim()
+
     if (!name || !email || !projectType) {
       setFormState("error")
       trackEvent("form_error", { reason: "required_fields" })
@@ -203,140 +258,210 @@ export function NoirumHome() {
     <main className="noirum-page">
       <section className="hero-section section-dark" aria-labelledby="hero-title">
         <div className="hero-image-column">
-          <img src="/visuals/server-room.jpg" alt="Corredor de racks em um data center com luz fria" className="hero-image" />
+          <Image
+            src="/visuals/server-room.jpg"
+            alt="Corredor de racks em um data center com luz fria"
+            className="hero-image"
+            fill
+            priority
+            sizes="(max-width: 900px) 100vw, 43vw"
+          />
           <div className="image-fringe image-fringe--cyan" aria-hidden="true" />
-          <div className="image-fringe image-fringe--magenta" aria-hidden="true" />
-          <div className="hero-image-caption"><span>NOIRUM / 001</span><span>ENGINEERED DIGITAL PRESENCE</span></div>
+          <div className="hero-image-caption"><span>NOIRUM / 001</span><span>DESIGN + DESENVOLVIMENTO</span></div>
         </div>
         <div className="hero-copy-column">
           <div className="hero-copy-inner">
-            <div className="credibility-line"><span className="credibility-marks">● ● ● ●</span><span>Web premium para negócios que exigem clareza</span></div>
-            <h1 id="hero-title" className="display-heading display-heading--hero">
-              Desenvolvimento Web <em>para a Elite Digital.</em>
-            </h1>
+            <HeroHeadline />
             <p className="hero-description">
-              A Noirum Studios constrói sites institucionais de alta performance e landing pages desenhadas para transformar atenção em movimento.
+              Sites institucionais e landing pages para negócios que precisam parecer tão claros quanto são.
             </p>
             <div className="hero-actions">
-              <a href="#contact" className="button button--light" onClick={() => trackEvent("hero_cta", { placement: "hero" })}>Solicitar proposta <ArrowUpRight size={16} /></a>
-              <a href="#projects" className="button button--ghost" onClick={() => trackEvent("project_view", { placement: "hero" })}>Ver projetos <ArrowRight size={16} /></a>
+              <a href="#contact" className="button button--light" onClick={() => trackEvent("hero_cta", { placement: "hero" })}>
+                Conversar sobre um projeto <ArrowUpRight size={16} />
+              </a>
+              <a href="#projects" className="button button--ghost" onClick={() => trackEvent("project_view", { placement: "hero" })}>
+                Ver trabalho <ArrowRight size={16} />
+              </a>
             </div>
-            <div className="hero-trust">
-              <span>CAPACIDADES CENTRAIS</span>
-              <div className="trust-list"><span>Design sob medida</span><span>Performance</span><span>Segurança</span></div>
+            <div className="hero-note">
+              <span className="hero-note-line" aria-hidden="true" />
+              <p>Uma operação independente, conduzida por Luiz Felipe Meneses.</p>
             </div>
           </div>
-          <a className="hero-scroll" href="#scan" aria-label="Ir para a seção de engenharia"><span>Scroll para explorar</span><ArrowDown size={16} /></a>
+          <div className="hero-bottom-note"><span>NOIRUM STUDIOS</span><span>WEB / CONTEÚDO / ENGENHARIA</span></div>
         </div>
       </section>
 
-      <div id="scan"><EngineeringScan /></div>
+      <div id="approach"><EngineeringScan /></div>
 
       <section className="credibility-section section-stone" aria-labelledby="credibility-title">
         <div className="stone-grid" aria-hidden="true" />
         <div className="container noirum-container credibility-layout">
-          <div className="section-kicker section-kicker--dark"><span>02</span><span>O que muda</span></div>
-          <div>
-            <h2 id="credibility-title" className="display-heading display-heading--stone">Sites que parecem à altura <span>do negócio que representam.</span></h2>
-            <p className="stone-lead">Não entregamos apenas uma camada visual. Organizamos posicionamento, interface, conteúdo e base técnica para que sua presença digital carregue o mesmo peso da sua operação.</p>
-          </div>
-          <div className="capability-strip" aria-label="Capacidades da Noirum">
-            {[
-              ["01", "Clareza", "A proposta certa aparece antes do ruído."],
-              ["02", "Conversão", "Cada próximo passo tem uma função."],
-              ["03", "Performance", "Menos espera. Mais atenção disponível."],
-              ["04", "Segurança", "Base preparada para operar com confiança."],
-            ].map(([number, title, text]) => <div className="capability-item" key={number}><span>{number}</span><strong>{title}</strong><p>{text}</p></div>)}
-          </div>
+          <Reveal variant="clip">
+            <h2 id="credibility-title" className="display-heading display-heading--stone">
+              Um site não precisa dizer tudo. <span>Precisa dizer o certo.</span>
+            </h2>
+          </Reveal>
+          <Reveal className="credibility-copy" variant="side" delay={0.08}>
+            <p className="stone-lead">
+              O trabalho começa organizando o que a marca precisa comunicar, para quem e com qual próximo passo. A interface vem depois dessa clareza.
+            </p>
+            <div className="capability-strip" aria-label="Princípios de construção">
+              <div className="capability-item"><span>01</span><strong>Clareza</strong><p>A proposta aparece antes do ruído.</p></div>
+              <div className="capability-item"><span>02</span><strong>Direção</strong><p>Forma e conteúdo seguem o mesmo caminho.</p></div>
+              <div className="capability-item"><span>03</span><strong>Base</strong><p>O código recebe o mesmo cuidado da superfície.</p></div>
+            </div>
+          </Reveal>
         </div>
       </section>
 
       <section id="projects" className="projects-section section-dark" aria-labelledby="projects-title">
         <div className="container noirum-container">
-          <div className="section-heading-row">
-            <div><div className="section-kicker"><span>03</span><span>Direções selecionadas</span></div><h2 id="projects-title" className="display-heading display-heading--medium">O trabalho começa <span>na percepção.</span></h2></div>
-            <p className="section-aside">Construímos sistemas digitais com intenção editorial, precisão de interface e espaço para o negócio respirar.</p>
-          </div>
-          <div className="projects-list">
-            {projects.map((project, index) => <article className={`project-item project-item--${project.align}`} key={project.id} onMouseEnter={() => trackEvent("project_open", { project: project.id })}>
-              <div className="project-visual">
-                <img src={project.image} alt={project.alt} loading={index === 0 ? "eager" : "lazy"} />
-                <div className="project-overlay" aria-hidden="true" />
-                <span className="project-index">{project.id}</span>
-                <span className="project-view">Abrir direção <ArrowUpRight size={15} /></span>
+            <Reveal className="section-intro" variant="clip">
+            <h2 id="projects-title" className="display-heading display-heading--medium">Trabalho para ser <span>percebido.</span></h2>
+            <p>As imagens abaixo são direções demonstrativas. Casos, clientes e resultados entram aqui somente depois de validados.</p>
+          </Reveal>
+          <div className="projects-grid">
+              <Reveal className="project-card project-card--lead" variant="project">
+                <ProjectVisual project={projects[0]} sizes="(max-width: 900px) 100vw, 56vw" parallax={["-4%", "4%"]} />
+              <div className="project-card-copy">
+                <h3>{projects[0].title}</h3>
+                <p>{projects[0].description}</p>
+                <span className="project-meta">{projects[0].meta}</span>
               </div>
-              <div className="project-copy">
-                <span className="micro-label">{project.type}</span>
-                <h3>{project.title}</h3>
-                <p>{project.description}</p>
-                <div className="project-meta"><span>{project.meta}</span><span>NOIRUM / DEMO</span></div>
-              </div>
-            </article>)}
+            </Reveal>
+            <div className="project-stack">
+              {projects.slice(1).map((project) => (
+                <Reveal className="project-card project-card--compact" key={project.id} variant={project.id === "02" ? "project-reverse" : "project"} delay={project.id === "03" ? 0.1 : 0}>
+                  <ProjectVisual project={project} sizes="(max-width: 900px) 100vw, 32vw" parallax={project.id === "02" ? ["2%", "-2%"] : ["-2%", "2%"]} />
+                  <div className="project-card-copy">
+                    <h3>{project.title}</h3>
+                    <p>{project.description}</p>
+                    <span className="project-meta">{project.meta}</span>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
           </div>
-          <p className="project-disclaimer">As imagens acima apresentam direções visuais demonstrativas. Casos, clientes e resultados publicados entram nesta camada somente após validação.</p>
         </div>
       </section>
 
       <section id="services" className="services-section section-stone" aria-labelledby="services-title">
         <div className="container noirum-container">
-          <div className="section-kicker section-kicker--dark"><span>04</span><span>O que construímos</span></div>
-          <div className="services-heading"><h2 id="services-title" className="display-heading display-heading--stone">Duas ofertas.<br /><span>Uma base exigente.</span></h2><p>Você compra clareza, credibilidade e estrutura digital — com cada detalhe de engenharia trabalhando a favor disso.</p></div>
-          <div className="service-rows">
-            <article className="service-row"><div className="service-number">01</div><div className="service-copy"><span className="micro-label micro-label--dark">Oferta principal</span><h3>Sites Institucionais Premium</h3><p>Uma presença digital sob medida para empresas que precisam explicar o que fazem, sustentar autoridade e abrir espaço para novas conversas.</p><a href="/servicos/site-institucional" className="inline-link inline-link--dark">Conhecer a oferta <ArrowUpRight size={15} /></a></div><div className="service-visual service-visual--architecture"><div className="service-visual-top"><span>CONTENT SYSTEM</span><span>01 / 02</span></div><div className="service-visual-title">A digital<br />headquarters.</div><div className="service-visual-line" /></div></article>
-            <article className="service-row service-row--reverse"><div className="service-number">02</div><div className="service-copy"><span className="micro-label micro-label--dark">Oferta principal</span><h3>Landing Pages de Alta Conversão</h3><p>Uma página com mensagem, prova e caminho de decisão organizados para campanhas, ofertas e lançamentos que não podem desperdiçar atenção.</p><a href="/servicos/landing-pages" className="inline-link inline-link--dark">Conhecer a oferta <ArrowUpRight size={15} /></a></div><div className="service-visual service-visual--conversion"><div className="conversion-signal">CONVERSION<br /><strong>PATH</strong></div><div className="conversion-metric"><span>signal / 02</span><b>01 clear next step</b></div><div className="conversion-line" /></div></article>
+          <Reveal className="services-heading" variant="clip">
+            <h2 id="services-title" className="display-heading display-heading--stone">Duas ofertas. <span>Uma conversa honesta.</span></h2>
+            <p>Escolha o problema que precisa ser resolvido. O escopo exato entra na proposta.</p>
+          </Reveal>
+          <div className="service-choices">
+            <motion.article className="service-choice" initial={reducedMotion ? false : { opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "0px 0px -10%" }} transition={reducedMotion ? { duration: 0 } : { duration: 0.72, ease: [0.16, 1, 0.3, 1] }}>
+              <div className="service-choice-media"><Image src="/visuals/brutalist-night.jpg" alt="Estrutura de concreto vista à noite" fill sizes="(max-width: 900px) 100vw, 48vw" loading="lazy" /></div>
+              <div className="service-choice-body"><span className="service-number">01</span><h3>Sites institucionais premium</h3><p>Uma presença digital sob medida para explicar a empresa, organizar autoridade e abrir espaço para novas conversas.</p><a href="/servicos/site-institucional" className="inline-link inline-link--dark">Conhecer a oferta <ArrowUpRight size={15} /></a></div>
+            </motion.article>
+            <motion.article className="service-choice service-choice--offset" initial={reducedMotion ? false : { opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "0px 0px -10%" }} transition={reducedMotion ? { duration: 0 } : { duration: 0.72, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}>
+
+              <div className="service-choice-body"><span className="service-number">02</span><h3>Landing pages de alta conversão</h3><p>Uma página com mensagem, prova e caminho de decisão organizados para uma campanha ou oferta específica.</p><a href="/servicos/landing-pages" className="inline-link inline-link--dark">Conhecer a oferta <ArrowUpRight size={15} /></a></div>
+              <div className="service-choice-media"><Image src="/visuals/monitor-detail.jpg" alt="Detalhe de monitor e teclado em ambiente de trabalho" fill sizes="(max-width: 900px) 100vw, 48vw" loading="lazy" /></div>
+            </motion.article>
           </div>
         </div>
       </section>
 
-      <section className="benefits-section section-dark" aria-labelledby="benefits-title">
+      <section id="process" className="process-section section-dark" aria-labelledby="process-title">
         <div className="container noirum-container">
-          <div className="section-kicker"><span>05</span><span>Por que Noirum</span></div>
-          <div className="benefits-heading"><h2 id="benefits-title" className="display-heading display-heading--medium">Engenharia que aparece <span>no resultado.</span></h2><p>O valor de um site bem construído não fica preso no código. Ele aparece na forma como sua marca é percebida e na facilidade de avançar.</p></div>
-          <div className="benefits-grid">
-            <article className="benefit-card benefit-card--large"><span className="benefit-symbol">↗</span><span className="micro-label">01 / Percepção</span><h3>Mais autoridade antes da primeira conversa.</h3><p>Uma interface precisa reduz dúvidas, organiza complexidade e faz o negócio parecer tão claro quanto ele é por dentro.</p></article>
-            <article className="benefit-card"><span className="benefit-symbol">→</span><span className="micro-label">02 / Conversão</span><h3>Menos distração entre interesse e ação.</h3><p>Conteúdo, hierarquia e CTA são desenhados como um único fluxo.</p></article>
-            <article className="benefit-card"><span className="benefit-symbol">◌</span><span className="micro-label">03 / Velocidade</span><h3>Mais tempo de atenção disponível.</h3><p>Carregamento, responsividade e arquitetura limpa sustentam a experiência em qualquer tela.</p></article>
-            <article className="benefit-card benefit-card--wide"><span className="benefit-symbol">⌁</span><span className="micro-label">04 / Continuidade</span><h3>Uma base que não envelhece no lançamento.</h3><p>O projeto nasce com decisões organizadas para receber novas páginas, integrações e aprendizados sem virar um acúmulo de remendos.</p></article>
-          </div>
-        </div>
-      </section>
-
-      <section id="process" className="process-section section-stone" aria-labelledby="process-title">
-        <div className="container noirum-container">
-          <div className="section-kicker section-kicker--dark"><span>06</span><span>Metodologia</span></div>
-          <div className="process-heading"><h2 id="process-title" className="display-heading display-heading--stone">Precisão em <span>cada fase.</span></h2><p>Um fluxo de trabalho técnico e controlado para transformar uma decisão de negócio em um sistema digital pronto para operar.</p></div>
-          <div className="process-line" aria-hidden="true" />
+          <Reveal className="process-heading" variant="clip"><h2 id="process-title" className="display-heading display-heading--medium">O projeto precisa de <span>ritmo.</span></h2><p>Menos improviso, mais decisões visíveis. Cada fase existe para reduzir ruído antes da próxima.</p></Reveal>
           <div className="process-grid">
-            {[
-              ["01", "Planejamento Estratégico", "Imersão no cenário, nos objetivos e na experiência ideal antes da concepção visual e técnica."],
-              ["02", "Construção Exclusiva", "Uma base sólida e sob medida para a marca, com decisões visuais e técnicas documentadas."],
-              ["03", "Retenção e Conversão", "Ajustes de hierarquia, conteúdo e velocidade para manter atenção e facilitar a próxima ação."],
-              ["04", "Lançamento e Crescimento", "Entrega polida, responsiva e organizada para acompanhar novas necessidades do negócio."],
-            ].map(([number, title, text]) => <article className="process-item" key={number}><span className="process-number">{number}</span><h3>{title}</h3><p>{text}</p></article>)}
+            {processSteps.map(([number, title, body], index) => (
+              <Reveal className="process-item" key={number} variant="side" delay={index * 0.08}>
+                <span className="process-number">{number}</span><h3>{title}</h3><p>{body}</p>
+              </Reveal>
+            ))}
           </div>
         </div>
       </section>
 
       <section className="engineering-section section-dark" aria-labelledby="engineering-title">
         <div className="container noirum-container engineering-layout">
-          <div><div className="section-kicker"><span>07</span><span>Critérios de engenharia</span></div><h2 id="engineering-title" className="display-heading display-heading--medium">A camada invisível também <span>precisa convencer.</span></h2><p className="engineering-lead">Performance não é um número isolado no rodapé. É a consequência de boas decisões repetidas ao longo do projeto.</p></div>
-          <div className="engineering-proof"><div className="proof-word">SEMÂNTICA</div><div className="proof-word">RESPONSIVO</div><div className="proof-word">ACESSÍVEL</div><div className="proof-word">ESCALÁVEL</div><div className="proof-word">SEGURO</div><div className="proof-note"><ShieldCheck size={18} strokeWidth={1.3} /><span>A arquitetura de auditoria está pronta para receber dados reais de cada projeto antes de sua publicação.</span></div></div>
+          <Reveal variant="clip">
+            <h2 id="engineering-title" className="display-heading display-heading--medium">A camada invisível também <span>faz parte da marca.</span></h2>
+            <p className="engineering-lead">Semântica, responsividade, fundamentos de SEO, acessibilidade e boas práticas de segurança entram na construção. Nenhum deles é promessa de resultado comercial isolado.</p>
+          </Reveal>
+          <Reveal className="engineering-proof" variant="side">
+            {engineeringItems.map((item, index) => (
+              <motion.div className="proof-word" key={item} initial={reducedMotion ? false : { opacity: 0, x: 18 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "0px 0px -10%" }} transition={reducedMotion ? { duration: 0 } : { duration: 0.58, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}><Check size={20} /> {item}</motion.div>
+            ))}
+            <div className="proof-note"><ShieldCheck size={18} strokeWidth={1.3} /><span>A fundação é construída com cuidado. A manutenção contínua depende também da hospedagem, das senhas e das atualizações do projeto.</span></div>
+          </Reveal>
         </div>
       </section>
 
-      <section className="testimonial-section section-stone" aria-labelledby="testimonial-title">
-        <div className="container noirum-container testimonial-layout"><div className="quote-mark">“</div><div><div className="section-kicker section-kicker--dark"><span>08</span><span>Prova social</span></div><h2 id="testimonial-title" className="display-heading display-heading--stone">A confiança entra aqui <span>quando for comprovada.</span></h2><p className="testimonial-placeholder">Este espaço está preparado para receber depoimentos reais, com nome, cargo e contexto verificáveis. Nenhuma frase genérica substitui uma experiência publicada com permissão.</p><span className="micro-label micro-label--dark">SISTEMA DE DEPOIMENTOS / AGUARDANDO MATERIAL VALIDADO</span></div></div>
+      <section id="about" className="about-section section-stone" aria-labelledby="about-title">
+        <div className="container noirum-container about-layout">
+            <Reveal className="about-image" variant="image">
+            <Image src="/visuals/brutalist-night.jpg" alt="Geometria de um edifício brutalista em preto e branco" fill sizes="(max-width: 900px) 100vw, 42vw" loading="lazy" />
+            <div className="about-image-note">IMAGEM DE ARQUIVO / NÃO É UM RETRATO</div>
+          </Reveal>
+          <Reveal className="about-copy" variant="side" delay={0.08}>
+            <h2 id="about-title" className="display-heading display-heading--stone">Uma operação pequena, com <span>atenção inteira.</span></h2>
+            <p>Eu sou Luiz Felipe Meneses, desenvolvedor web independente e criador da Noirum Studios.</p>
+            <p>Trabalho na intersecção entre direção visual e desenvolvimento. Meu foco é construir sites institucionais e landing pages que sejam bonitos, claros, rápidos de entender e possíveis de explicar.</p>
+            <p className="about-note">Ainda não publico uma equipe ou um acervo de casos que não possa comprovar. Prefiro mostrar o que está pronto e conversar sobre o que precisa ser construído.</p>
+            <a href="#contact" className="inline-link inline-link--dark">Conversar sobre um projeto <ArrowUpRight size={15} /></a>
+          </Reveal>
+        </div>
       </section>
 
-      <section id="about" className="about-section section-dark" aria-labelledby="about-title">
-        <div className="container noirum-container about-layout"><div className="about-image"><img src="/visuals/brutalist-night.jpg" alt="Geometria de um edifício brutalista em preto e branco" loading="lazy" /><div className="about-image-note">NOIRUM STUDIOS / DIGITAL ENGINEERING</div></div><div className="about-copy"><div className="section-kicker"><span>09</span><span>Sobre Noirum</span></div><h2 id="about-title" className="display-heading display-heading--medium">Uma unidade de engenharia para marcas que <span>não aceitam o básico.</span></h2><p>A Noirum Studios trabalha na intersecção entre direção visual e desenvolvimento web. O foco é construir presenças digitais premium para negócios que entendem que o site não é um adereço: é parte da operação.</p><p>Somos seletivos no detalhe, diretos no processo e cuidadosos com o que colocamos no ar. O resultado precisa ser bonito, rápido, explicável e pronto para evoluir.</p><a href="#contact" className="inline-link">Falar sobre um projeto <ArrowUpRight size={15} /></a></div></div>
+      <section className="faq-section section-dark" aria-labelledby="faq-title">
+        <div className="container noirum-container faq-layout">
+          <Reveal variant="clip"><h2 id="faq-title" className="display-heading display-heading--medium">Clareza antes <span>do contrato.</span></h2></Reveal>
+          <div className="faq-list">
+            {faqs.map((faq, index) => {
+              const isOpen = openFaq === index
+              return (
+                <div className="faq-item" key={faq.question}>
+                  <button className="faq-button" type="button" aria-expanded={isOpen} onClick={() => setOpenFaq(isOpen ? null : index)}>
+                    <span>{faq.question}</span>
+                    <span className={`faq-icon ${isOpen ? "is-open" : ""}`}><Plus size={18} strokeWidth={1.4} /></span>
+                  </button>
+                  <div className={`faq-answer ${isOpen ? "is-open" : ""}`}><p>{faq.answer}</p></div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
       </section>
 
-      <section className="faq-section section-dark" aria-labelledby="faq-title"><div className="container noirum-container"><div className="section-kicker"><span>10</span><span>Perguntas frequentes</span></div><div className="faq-layout"><h2 id="faq-title" className="display-heading display-heading--medium">Clareza antes <span>do contrato.</span></h2><div className="faq-list">{faqs.map((faq, index) => { const isOpen = openFaq === index; return <div className="faq-item" key={faq.question}><button className="faq-button" type="button" aria-expanded={isOpen} onClick={() => setOpenFaq(isOpen ? null : index)}><span>{faq.question}</span><span className={`faq-icon ${isOpen ? "is-open" : ""}`}><Plus size={18} strokeWidth={1.4} /></span></button><div className={`faq-answer ${isOpen ? "is-open" : ""}`}><p>{faq.answer}</p></div></div> })}</div></div></div></section>
+      <section id="contact" className="contact-section section-stone" aria-labelledby="contact-title">
+        <div className="container noirum-container contact-layout">
+          <Reveal className="contact-copy" variant="clip">
+            <h2 id="contact-title" className="display-heading display-heading--stone">Se fizer sentido, a próxima etapa <span>começa aqui.</span></h2>
+            <p>Conte o que existe, o que precisa mudar e o que seria um bom projeto para você. Eu respondo com contexto, não com uma tabela pronta.</p>
+            <div className="contact-fallback"><span>Prefere conversar direto?</span><a href={`https://wa.me/${whatsappNumber}`} target="_blank" rel="noopener noreferrer" onClick={() => trackEvent("whatsapp_click", { placement: "contact" })}>Abrir WhatsApp <ArrowUpRight size={15} /></a></div>
+          </Reveal>
+          <Reveal variant="side" delay={0.08}>
+            <form className="lead-form" onSubmit={handleSubmit} onChange={() => formState !== "idle" && setFormState("idle")} noValidate>
+              <div className="form-row">
+                <label htmlFor="name">Nome<input id="name" name="name" placeholder="Seu nome" autoComplete="name" required aria-invalid={formState === "error"} /></label>
+                <label htmlFor="company">Empresa<input id="company" name="company" placeholder="Nome da empresa" autoComplete="organization" /></label>
+              </div>
+              <div className="form-row">
+                <label htmlFor="email">E-mail<input id="email" name="email" type="email" placeholder="voce@empresa.com" autoComplete="email" required aria-invalid={formState === "error"} /></label>
+                <label htmlFor="projectType">Tipo de projeto<select id="projectType" name="projectType" defaultValue="" required aria-invalid={formState === "error"}><option value="" disabled>Selecione uma opção</option><option>Site institucional premium</option><option>Landing page de alta conversão</option><option>Ainda avaliando</option></select></label>
+              </div>
+              <div className="form-row">
+                <label htmlFor="objective">Objetivo<input id="objective" name="objective" placeholder="O que precisa mudar?" /></label>
+                <label htmlFor="timeline">Prazo<input id="timeline" name="timeline" placeholder="Existe uma data importante?" /></label>
+              </div>
+              <label htmlFor="message">Mensagem<textarea id="message" name="message" rows={4} placeholder="Contexto, desafio e o que você espera do projeto." /></label>
+              <p className="form-helper">Os dados são usados apenas para responder ao seu contato e preparar a conversa sobre o projeto.</p>
+              {formState === "error" && <p className="form-feedback form-feedback--error" role="alert">Preencha nome, e-mail e tipo de projeto para continuar.</p>}
+              {formState === "success" && <p className="form-feedback form-feedback--success" role="status">WhatsApp aberto. Se preferir, você também pode continuar por e-mail.</p>}
+              <button className="button button--ink form-submit" type="submit" onClick={() => trackEvent("form_start", { placement: "contact" })}>Enviar briefing <Send size={15} /></button>
+            </form>
+          </Reveal>
+        </div>
+      </section>
 
-      <section id="contact" className="contact-section section-stone" aria-labelledby="contact-title"><div className="container noirum-container contact-layout"><div className="contact-copy"><div className="section-kicker section-kicker--dark"><span>11</span><span>Próximo passo</span></div><h2 id="contact-title" className="display-heading display-heading--stone">Seu próximo site pode começar <span>aqui.</span></h2><p>Conte sobre o projeto. A Noirum entra em contato para entender escopo, objetivo e próximos passos.</p><div className="contact-fallback"><span>Prefere conversar direto?</span><a href={`https://wa.me/${whatsappNumber}`} target="_blank" rel="noopener noreferrer" onClick={() => trackEvent("whatsapp_click", { placement: "contact" })}>Abrir WhatsApp <ArrowUpRight size={15} /></a></div></div><form className="lead-form" onSubmit={handleSubmit} noValidate><div className="form-row"><label>Nome <input name="name" placeholder="Seu nome" autoComplete="name" /></label><label>Empresa <input name="company" placeholder="Nome da empresa" autoComplete="organization" /></label></div><div className="form-row"><label>E-mail <input name="email" type="email" placeholder="voce@empresa.com" autoComplete="email" /></label><label>Tipo de projeto <select name="projectType" defaultValue=""><option value="" disabled>Selecione</option><option>Site institucional premium</option><option>Landing page de alta conversão</option><option>Ainda avaliando</option></select></label></div><div className="form-row"><label>Objetivo <input name="objective" placeholder="O que precisa mudar?" /></label><label>Prazo <input name="timeline" placeholder="Existe uma data importante?" /></label></div><label>Mensagem <textarea name="message" rows={4} placeholder="Contexto, desafio e o que você espera do projeto." /></label>{formState === "error" && <p className="form-feedback form-feedback--error" role="alert">Preencha nome, e-mail e tipo de projeto para continuar.</p>}{formState === "success" && <p className="form-feedback form-feedback--success" role="status">WhatsApp aberto. Se preferir, você também pode continuar por e-mail.</p>}<button className="button button--ink form-submit" type="submit" onClick={() => trackEvent("form_start", { placement: "contact" })}>Enviar briefing <Send size={15} /></button></form></div></section>
-
-      <section className="final-line section-dark" aria-label="Fechamento"><div className="container noirum-container final-line-inner"><span>NOIRUM STUDIOS</span><span>DESIGN / ENGINEERING / CONVERSION</span><span>2026</span></div></section>
+      <section className="final-line section-dark" aria-label="Fechamento"><div className="container noirum-container final-line-inner"><span>NOIRUM STUDIOS</span><span>DESIGN / DESENVOLVIMENTO / CONTEÚDO</span><span>2026</span></div></section>
     </main>
   )
 }
