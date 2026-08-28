@@ -5,7 +5,7 @@ import { ArrowUpRight } from "lucide-react"
 const footerGroups = [
   {
     title: "Explorar",
-    links: [["Trabalho", "/#projects"], ["Ofertas", "/#services"], ["Processo", "/#process"], ["Sobre", "/#about"]],
+    links: [["Work", "/#work"], ["Offers", "/#offers"], ["How we build", "/#build"], ["Studio", "/#studio"]],
   },
   {
     title: "Serviços",
@@ -30,7 +30,7 @@ export function Footer() {
         <div className="footer-top">
           <div className="footer-statement">
             <span className="footer-overline">Noirum Studios</span>
-            <p>Presença digital com direção, desenvolvimento e atenção inteira.</p>
+            <p>Experiências digitais com direção, design e desenvolvimento.</p>
             <Link href="/#contact" className="footer-primary-link">Conversar sobre um projeto <ArrowUpRight size={14} aria-hidden="true" /></Link>
           </div>
           <div className="footer-links-grid">

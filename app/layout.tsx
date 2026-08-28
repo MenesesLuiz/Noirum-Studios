@@ -9,13 +9,13 @@ const sora = Sora({ subsets: ["latin"], variable: "--font-display", weight: ["40
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://noirum-studios.vercel.app"),
-  title: "Noirum Studios — Desenvolvimento web com direção",
-  description: "Sites institucionais e landing pages construídos por Luiz Felipe Meneses com direção visual, conteúdo claro e desenvolvimento web cuidadoso.",
+  title: "Noirum Studios — Afterimage",
+  description: "Estúdio digital independente para sites institucionais premium e landing pages, com direção, design e desenvolvimento.",
   generator: "Noirum Studios",
   alternates: { canonical: "/" },
   openGraph: {
-    title: "Noirum Studios — Desenvolvimento web com direção",
-    description: "Presença digital clara, sob medida e pronta para ser entendida.",
+    title: "Noirum Studios — Afterimage",
+    description: "Sites institucionais premium e landing pages construídos com direção, design e desenvolvimento.",
     url: "https://noirum-studios.vercel.app",
     siteName: "Noirum Studios",
     locale: "pt_BR",
@@ -23,15 +23,15 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Noirum Studios — Desenvolvimento web com direção",
-    description: "Sites institucionais e landing pages construídos por Luiz Felipe Meneses.",
+    title: "Noirum Studios — Afterimage",
+    description: "Estúdio digital independente criado por Luiz Felipe Meneses.",
   },
   icons: { icon: "/logo-mini.webp" },
 }
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="pt-BR" className={`${geist.variable} ${geistMono.variable} ${sora.variable}`}>
+    <html lang="pt-BR" data-scroll-behavior="smooth" className={`${geist.variable} ${geistMono.variable} ${sora.variable}`}>
       <body className="font-sans antialiased">
         {/*
           THESIS: A Noirum traduz complexidade em presença digital clara e recusa a agência genérica que só decora superfícies.
