@@ -7,6 +7,7 @@ import { LazyMotion, domAnimation, m, useScroll, useTransform } from "framer-mot
 import { ArrowRight, ArrowUpRight, Check, Mail, Send } from "lucide-react"
 
 const whatsappNumber = "5594992810971"
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 const visualStudies = [
   {
@@ -116,7 +117,7 @@ export function NoirumHome() {
     const projectType = String(data.get("projectType") || "").trim()
     const messageText = String(data.get("message") || "").trim()
 
-    if (!name || !email || !projectType) {
+    if (!name || !emailPattern.test(email) || !projectType) {
       setFormState("error")
       trackEvent("form_error", { reason: "required_fields" })
       return
@@ -153,11 +154,11 @@ export function NoirumHome() {
         <div className="afterimage-hero-copy">
           <div className="afterimage-hero-copy-inner">
             <p className="afterimage-kicker">INDEPENDENT DIGITAL STUDIO</p>
-            <h1 id="hero-title" className="afterimage-hero-title">
-              <span data-afterimage="BUILT">BUILT</span>
-              <span data-afterimage="FOR">FOR</span>
-              <em data-afterimage="THE">THE</em>
-              <em data-afterimage="AFTERIMAGE.">AFTERIMAGE.</em>
+            <h1 id="hero-title" className="afterimage-hero-title" aria-label="BUILT FOR THE AFTERIMAGE.">
+              <span data-afterimage="BUILT" aria-hidden="true">BUILT</span>
+              <span data-afterimage="FOR" aria-hidden="true">FOR</span>
+              <em data-afterimage="THE" aria-hidden="true">THE</em>
+              <em data-afterimage="AFTERIMAGE." aria-hidden="true">AFTERIMAGE.</em>
             </h1>
             <div className="afterimage-hero-meta">
               <span>BRAND WEBSITES / LANDING PAGES</span>
@@ -233,7 +234,7 @@ export function NoirumHome() {
               <p className="afterimage-section-lead">Cada projeto começa pelo que precisa ser entendido, ganha forma antes do código e é revisado para existir fora do mockup.</p>
             </Reveal>
           </div>
-          <div className="afterimage-build-track" aria-label="Como a Noirum constrói um projeto">
+          <div className="afterimage-build-track">
             <m.span className="afterimage-build-progress" initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true, margin: "0px 0px -12%" }} transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }} aria-hidden="true" />
             {buildSteps.map(([number, title, question], index) => (
               <Reveal className="afterimage-build-step" key={number} variant="lift" delay={index * 0.08}>

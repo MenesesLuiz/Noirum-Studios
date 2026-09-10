@@ -1,6 +1,21 @@
+import type { Metadata } from "next"
 import { Footer } from "@/components/sections/footer"
 import { Header } from "@/components/sections/header"
 import { LegalPage } from "@/components/sections/legal-page"
+
+export const metadata: Metadata = {
+  title: "Política de segurança — Noirum Studios",
+  description: "Como trato a segurança da navegação, das informações compartilhadas e das bases digitais que desenvolvo.",
+  alternates: { canonical: "https://noirum-studios.vercel.app/seguranca" },
+  openGraph: {
+    title: "Política de segurança — Noirum Studios",
+    description: "Como trato a segurança da navegação, das informações compartilhadas e das bases digitais que desenvolvo.",
+    url: "https://noirum-studios.vercel.app/seguranca",
+    siteName: "Noirum Studios",
+    locale: "pt_BR",
+    type: "website",
+  },
+}
 
 export default function SecurityPage() {
   return (

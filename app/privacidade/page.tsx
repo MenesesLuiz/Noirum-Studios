@@ -1,6 +1,21 @@
+import type { Metadata } from "next"
 import { Footer } from "@/components/sections/footer"
 import { Header } from "@/components/sections/header"
 import { LegalPage } from "@/components/sections/legal-page"
+
+export const metadata: Metadata = {
+  title: "Política de privacidade — Noirum Studios",
+  description: "Como eu, Luiz Felipe Meneses, desenvolvedor independente e criador da Noirum Studios, trato as informações compartilhadas neste site.",
+  alternates: { canonical: "https://noirum-studios.vercel.app/privacidade" },
+  openGraph: {
+    title: "Política de privacidade — Noirum Studios",
+    description: "Como eu, Luiz Felipe Meneses, desenvolvedor independente e criador da Noirum Studios, trato as informações compartilhadas neste site.",
+    url: "https://noirum-studios.vercel.app/privacidade",
+    siteName: "Noirum Studios",
+    locale: "pt_BR",
+    type: "website",
+  },
+}
 
 export default function PrivacyPage() {
   return (

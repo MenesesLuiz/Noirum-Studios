@@ -1,6 +1,21 @@
+import type { Metadata } from "next"
 import { Footer } from "@/components/sections/footer"
 import { Header } from "@/components/sections/header"
 import { LegalPage } from "@/components/sections/legal-page"
+
+export const metadata: Metadata = {
+  title: "Termos de uso e prestação de serviços — Noirum Studios",
+  description: "As condições gerais para a utilização deste site e para a prestação dos meus serviços de desenvolvimento web.",
+  alternates: { canonical: "https://noirum-studios.vercel.app/termos" },
+  openGraph: {
+    title: "Termos de uso e prestação de serviços — Noirum Studios",
+    description: "As condições gerais para a utilização deste site e para a prestação dos meus serviços de desenvolvimento web.",
+    url: "https://noirum-studios.vercel.app/termos",
+    siteName: "Noirum Studios",
+    locale: "pt_BR",
+    type: "website",
+  },
+}
 
 export default function TermsPage() {
   return (
