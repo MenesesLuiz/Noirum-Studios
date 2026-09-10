@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   title: "Noirum Studios — Afterimage",
   description: "Estúdio digital independente para sites institucionais premium e landing pages, com direção, design e desenvolvimento.",
   generator: "Noirum Studios",
-  alternates: { canonical: "/" },
+  alternates: { canonical: "https://noirum-studios.vercel.app" },
   openGraph: {
     title: "Noirum Studios — Afterimage",
     description: "Sites institucionais premium e landing pages construídos com direção, design e desenvolvimento.",

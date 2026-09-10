@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { motion } from "framer-motion"
+import { LazyMotion, domAnimation, m } from "framer-motion"
 import { ArrowRight, ArrowUpRight, Check, Mail } from "lucide-react"
 
 type ServicePageProps = {
@@ -85,7 +85,7 @@ function Reveal({ children, className = "", variant = "lift", delay = 0 }: { chi
   }[variant]
 
   return (
-    <motion.div
+    <m.div
       initial={initial}
       whileInView={{ opacity: 1, x: 0, y: 0, clipPath: "inset(0 0 0 0)" }}
       viewport={{ once: true, margin: "0px 0px -12%" }}
@@ -94,7 +94,7 @@ function Reveal({ children, className = "", variant = "lift", delay = 0 }: { chi
       className={className}
     >
       {children}
-    </motion.div>
+    </m.div>
   )
 }
 
@@ -102,6 +102,7 @@ export function ServicePage({ kind }: ServicePageProps) {
   const service = services[kind]
 
   return (
+    <LazyMotion features={domAnimation}>
     <main className="service-page">
       <section className="service-hero section-dark" aria-labelledby="service-title">
         <div className="container noirum-container service-hero-grid">
@@ -178,10 +179,11 @@ export function ServicePage({ kind }: ServicePageProps) {
             <p className="service-contact-label">Próximo passo</p>
             <h2 id="service-contact-title" className="display-heading display-heading--stone">{service.closing}</h2>
             <p>Conte o que você está construindo e em que ponto precisa de ajuda. A primeira conversa serve para entender se a oferta faz sentido para o cenário.</p>
-            <div className="service-contact-links"><a href="/#contact" className="button button--ink">Conversar sobre um projeto <ArrowUpRight size={16} /></a><a href="mailto:menesesluizf@gmail.com" className="inline-link inline-link--dark"><Mail size={15} /> Enviar e-mail</a></div>
+            <div className="service-contact-links"><Link href="/#contact" className="button button--ink">Conversar sobre um projeto <ArrowUpRight size={16} /></Link><a href="mailto:menesesluizf@gmail.com" className="inline-link inline-link--dark"><Mail size={15} /> Enviar e-mail</a></div>
           </Reveal>
         </div>
       </section>
     </main>
+    </LazyMotion>
   )
 }

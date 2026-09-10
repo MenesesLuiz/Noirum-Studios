@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { AnimatePresence, motion } from "framer-motion"
+import { AnimatePresence, LazyMotion, domAnimation, m } from "framer-motion"
 import { ArrowUpRight, Menu, X } from "lucide-react"
 
 const navLinks = [
@@ -30,8 +30,9 @@ export function Header() {
   const closeMenu = () => setIsMobileMenuOpen(false)
 
   return (
-    <>
-      <motion.header
+    <LazyMotion features={domAnimation}>
+      <>
+      <m.header
         initial={{ y: -12 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
@@ -52,19 +53,20 @@ export function Header() {
             {isMobileMenuOpen ? <X size={20} strokeWidth={1.25} /> : <Menu size={20} strokeWidth={1.25} />}
           </button>
         </div>
-      </motion.header>
+      </m.header>
 
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.22 }} id="mobile-menu" className="mobile-menu" role="dialog" aria-modal="true" aria-label="Menu principal">
+          <m.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.22 }} id="mobile-menu" className="mobile-menu" role="dialog" aria-modal="true" aria-label="Menu principal">
             <nav aria-label="Navegação mobile">
-              {navLinks.map((link, index) => <motion.div key={link.label} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05, duration: 0.35 }}><Link href={link.href} onClick={closeMenu}>{link.label}<ArrowUpRight size={18} aria-hidden="true" /></Link></motion.div>)}
+              {navLinks.map((link, index) => <m.div key={link.label} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05, duration: 0.35 }}><Link href={link.href} onClick={closeMenu}>{link.label}<ArrowUpRight size={18} aria-hidden="true" /></Link></m.div>)}
             </nav>
             <Link href={proposalUrl} className="button button--light mobile-menu-cta" onClick={closeMenu}>{primaryLabel} <ArrowUpRight size={16} /></Link>
             <div className="mobile-menu-foot"><span>NOIRUM STUDIOS</span><span>LUIZ FELIPE MENESES</span></div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
-    </>
+      </>
+    </LazyMotion>
   )
 }

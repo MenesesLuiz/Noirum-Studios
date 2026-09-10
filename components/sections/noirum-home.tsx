@@ -2,7 +2,8 @@
 
 import { FormEvent, useRef, useState } from "react"
 import Image from "next/image"
-import { motion, useScroll, useTransform } from "framer-motion"
+import Link from "next/link"
+import { LazyMotion, domAnimation, m, useScroll, useTransform } from "framer-motion"
 import { ArrowRight, ArrowUpRight, Check, Mail, Send } from "lucide-react"
 
 const whatsappNumber = "5594992810971"
@@ -68,7 +69,7 @@ function Reveal({
   }[variant]
 
   return (
-    <motion.div
+    <m.div
       data-afterimage-reveal="true"
       initial={initial}
       whileInView={{ opacity: 1, x: 0, y: 0, clipPath: "inset(0 0 0 0)" }}
@@ -77,7 +78,7 @@ function Reveal({
       className={className}
     >
       {children}
-    </motion.div>
+    </m.div>
   )
 }
 
@@ -94,9 +95,9 @@ function ProjectVisual({
 
   return (
     <div ref={ref} className={`afterimage-study-visual ${className}`}>
-      <motion.div className="afterimage-study-image" style={{ y: imageY }}>
+      <m.div className="afterimage-study-image" style={{ y: imageY }}>
         <Image src={study.image} alt={study.alt} fill sizes="(max-width: 900px) 100vw, 62vw" loading={study.id === "01" ? undefined : "lazy"} />
-      </motion.div>
+      </m.div>
       <div className="afterimage-study-frame" aria-hidden="true" />
       <span className="afterimage-study-index">{study.id}</span>
     </div>
@@ -134,6 +135,7 @@ export function NoirumHome() {
   }
 
   return (
+    <LazyMotion features={domAnimation}>
     <main className="afterimage-page">
       <section className="afterimage-hero section-dark" aria-labelledby="hero-title">
         <div className="afterimage-hero-visual">
@@ -187,12 +189,12 @@ export function NoirumHome() {
             <Reveal className="afterimage-offer-row" variant="side">
               <span className="afterimage-offer-number">01</span>
               <div><h3>Sites institucionais premium</h3><p>Para explicar uma empresa, organizar autoridade e abrir a próxima conversa.</p></div>
-              <a href="/servicos/site-institucional" className="afterimage-row-link">Ver oferta <ArrowUpRight size={15} aria-hidden="true" /></a>
+              <Link href="/servicos/site-institucional" className="afterimage-row-link">Ver oferta <ArrowUpRight size={15} aria-hidden="true" /></Link>
             </Reveal>
             <Reveal className="afterimage-offer-row" variant="side" delay={0.1}>
               <span className="afterimage-offer-number">02</span>
               <div><h3>Landing pages</h3><p>Para foco, campanha, lançamento ou decisão — com o próximo passo visível.</p></div>
-              <a href="/servicos/landing-pages" className="afterimage-row-link">Ver oferta <ArrowUpRight size={15} aria-hidden="true" /></a>
+              <Link href="/servicos/landing-pages" className="afterimage-row-link">Ver oferta <ArrowUpRight size={15} aria-hidden="true" /></Link>
             </Reveal>
           </div>
         </div>
@@ -232,7 +234,7 @@ export function NoirumHome() {
             </Reveal>
           </div>
           <div className="afterimage-build-track" aria-label="Como a Noirum constrói um projeto">
-            <motion.span className="afterimage-build-progress" initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true, margin: "0px 0px -12%" }} transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }} aria-hidden="true" />
+            <m.span className="afterimage-build-progress" initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true, margin: "0px 0px -12%" }} transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }} aria-hidden="true" />
             {buildSteps.map(([number, title, question], index) => (
               <Reveal className="afterimage-build-step" key={number} variant="lift" delay={index * 0.08}>
                 <span className="afterimage-build-number">{number}</span>
@@ -290,5 +292,6 @@ export function NoirumHome() {
 
       <section className="afterimage-endmark section-dark" aria-label="Fechamento"><div className="container noirum-container"><span>NOIRUM — AFTERIMAGE</span><span>06 / 06</span></div></section>
     </main>
+    </LazyMotion>
   )
 }
